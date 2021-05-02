@@ -1,10 +1,12 @@
 {
+    "name": "martinmarx/symfony_boilerplate",
+    "description": "Symfony boilerplate project",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=7.2.5",
+        "php": ">=8.0.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "composer/package-versions-deprecated": "1.11.99.1",
@@ -38,11 +40,16 @@
         "symfony/twig-bundle": "^5.2",
         "symfony/validator": "5.2.*",
         "symfony/web-link": "5.2.*",
+        "symfony/webpack-encore-bundle": "^1.11",
         "symfony/yaml": "5.2.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "friendsofphp/php-cs-fixer": "^2.18",
+        "phpmetrics/phpmetrics": "^2.7",
+        "phpstan/phpstan-symfony": "^0.12.28",
         "symfony/browser-kit": "^5.2",
         "symfony/css-selector": "^5.2",
         "symfony/debug-bundle": "^5.2",
