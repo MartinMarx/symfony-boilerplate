@@ -5,7 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-    
+
 jobs:
   symfony:
     name: Symfony 5.2 (PHP ${{ matrix.php-versions }})
@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.4', '8.0']
+        php-versions: ['8.0']
     steps:
       # —— Setup Github actions 🐙 —————————————————————————————————————————————
       # https://github.com/actions/checkout (official)
@@ -40,12 +40,6 @@ jobs:
 
       - name: Check PHP Version
         run: php -v
-
-      # https://github.com/zhulik/redis-action (community)
-      - name: Setup Redis with zhulik/redis-action
-        uses: zhulik/redis-action@1.1.0
-        with:
-          redis version: '5'
 
       ## —— Yarn 🐱 ————————————————————————————————————————————————————————————
       - name: Yarn install
