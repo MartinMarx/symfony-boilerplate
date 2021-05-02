@@ -48,7 +48,7 @@ jobs:
         with:
           node-version: '12'
           registry-url: npm.fontawesome.com
-        run: yarn install
+      - run: yarn install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
 
