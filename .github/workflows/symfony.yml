@@ -2,8 +2,10 @@
 name: Symfony 5 CI Process
 on:
   push:
-    branches:
-      - master
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    
 jobs:
   symfony:
     name: Symfony 5.2 (PHP ${{ matrix.php-versions }})
