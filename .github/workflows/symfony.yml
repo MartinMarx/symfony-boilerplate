@@ -86,7 +86,7 @@ jobs:
 
       ## —— Coding standards ✨ ————————————————————————————————————————————————
       - name: Coding standards checks (php_codesniffer + php-cs-fixer)
-        run: phpcs -q --report=checkstyle src | cs2pr
+        run: php-cs-fixer fix
 
       ## —— Static analysis ✨ —————————————————————————————————————————————————
       - name: Static analysis of PHP code (PHPStan)
