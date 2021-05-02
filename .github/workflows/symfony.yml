@@ -1,5 +1,5 @@
 # https://help.github.com/en/actions
-name: Full CI process for Symfony 5
+name: Symfony 5 CI Process
 on:
   push:
     branches:
