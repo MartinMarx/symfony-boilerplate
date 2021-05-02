@@ -1,10 +1,6 @@
 # https://help.github.com/en/actions
 name: Symfony 5 CI Process
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
   symfony:
@@ -35,6 +31,8 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, pgsql, dom, filter, gd, iconv, json, mbstring, pdo
+          coverage: xdebug
+          tools: composer:v2, php-cs-fixer, phpunit, symfony-cli, phpstan, phpcs, cs2pr
         env:
           update: true
 
@@ -63,32 +61,45 @@ jobs:
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Cache composer dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install Composer dependencies
-        run: make install
+        run: |
+          composer require --dev symfony/orm-pack symfony/phpunit-bridge
+          composer install --no-progress --prefer-dist --optimize-autoloader
+          php bin/phpunit install
 
       # —— Symfony 🎵 ——————————————————————————————————————————————————————————
-      - name: Check Symfony requirements
-        run: vendor/bin/requirements-checker
-
       - name: Check the Symfony console
         run: |
           bin/console about
 
+      - name: Check Symfony requirements
+        run: symfony check:requirements
+
+      - name: Check Symfony security
+        run: symfony check:security
+
       ## —— Coding standards ✨ ————————————————————————————————————————————————
-      # Can't handle PHP8 for now
       - name: Coding standards checks (php_codesniffer + php-cs-fixer)
-        run: make fixcs
+        run: phpcs -q --report=checkstyle src | cs2pr
 
       ## —— Static analysis ✨ —————————————————————————————————————————————————
       - name: Static analysis of PHP code (PHPStan)
-        run: make phpstan
+        run: phpstan analyse src
 
       ## —— Tests ✅ ———————————————————————————————————————————————————————————
-      - name: Run functionnal and unit tests
-        run: make test
+
+      - name: Run Migrations
+        run: |
+          php bin/console doctrine:schema:update --force || echo "No migrations found or schema update failed"
+          php bin/console doctrine:migrations:migrate || echo "No migrations found or migration failed"
+      env:
+        DATABASE_URL: postgres://postgres:postgres@127.0.0.1:${{ job.services.postgres.ports[5432] }}/postgres?charset=UTF-8
+
+      - name: Run Tests
+        run: php bin/phpunit --coverage-text
